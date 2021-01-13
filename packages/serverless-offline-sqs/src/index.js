@@ -189,13 +189,18 @@ class ServerlessOfflineSQS {
     };
 
     const x = handler(event, lambdaContext, lambdaContext.done);
-    if (x && typeof x.then === 'function' && typeof x.catch === 'function')
-      x.then(lambdaContext.succeed).catch(lambdaContext.fail);
-    else if (x instanceof Error) lambdaContext.fail(x);
-
-    process.env = env;
+    if (x && typeof x.then === 'function' && typeof x.catch === 'function') {
+      x.then(lambdaContext.succeed)
+        .catch(lambdaContext.fail)
+        .then(() => {
+          process.env = env;
+        });
+    } else if (x instanceof Error) {
+      lambdaContext.fail(x);
+      process.env = env;
+    }
   }
-
+  
   async createQueueReadable(functionName, queueEvent) {
     const client = this.getClient();
     const QueueName = this.getQueueName(queueEvent);
