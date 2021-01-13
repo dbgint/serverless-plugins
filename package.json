@@ -14,6 +14,7 @@
     "test": "npm run eslint && npm run test:unit && npm run test:integration",
     "publish": "lerna publish"
   },
+  "main": "serverless-offline-sqs",
   "dependencies": {
     "lerna": "^3.20.2",
     "serverless": "^1.66.0"
